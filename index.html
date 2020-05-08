@@ -4,17 +4,24 @@
     <title>War Simulator</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
       html, body {
         margin: 0;
         padding: 0.5rem;
         font-family: 'Roboto', sans-serif;
-        background-color: #f0f0f0;
+        background-color: #303030;
+        color: #f0f0f0;
       }
 
       h1, h2, h3, h4, h5, h6 {
         margin: 0 0 1rem 0;
+        font-weight: 500;
+      }
+
+      .container {
+        max-width: 35rem;
+        margin: 0 auto;
       }
 
       .simulation-button {
@@ -23,76 +30,78 @@
     </style>
   </head>
   <body>
-    <h1>War Simulator</h1>
+    <div class="container">
+      <h1>War Simulator</h1>
 
-    <div>
-      <h2>Inputs</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <label for="available-attacking-troops">
-                Available attacking troops
-              </label>
-            </td>
-            <td>
-              <input id="available-attacking-troops" type="number" value="2">
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="available-defending-troops">
-                Available defending troops
-              </label>
-            </td>
-            <td>
-              <input id="available-defending-troops" type="number" value="1">
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="iterations">
-                Iterations
-              </label>
-            </td>
-            <td>
-              <input id="iterations" type="number" value="10000">
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>
-              <button class="simulation-button" onclick="onSimulationButtonClick()">
-                Simulate
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <div>
+        <h2>Inputs</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <label for="available-attacking-troops">
+                  Available attacking troops
+                </label>
+              </td>
+              <td>
+                <input id="available-attacking-troops" type="number" value="2">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="available-defending-troops">
+                  Available defending troops
+                </label>
+              </td>
+              <td>
+                <input id="available-defending-troops" type="number" value="1">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="iterations">
+                  Iterations
+                </label>
+              </td>
+              <td>
+                <input id="iterations" type="number" value="10000">
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <button class="simulation-button" onclick="onSimulationButtonClick()">
+                  Simulate
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <div>
-      <h2>Results</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Victories</td>
-            <td id="victories">0</td>
-          </tr>
-          <tr>
-            <td>Average remaining attack troops on victories</td>
-            <td id="average-remaining-attack-troops">0</td>
-          </tr>
-          <tr>
-            <td>Defeats</td>
-            <td id="defeats">0</td>
-          </tr>
-          <tr>
-            <td>Average remaining defense troops on defeats</td>
-            <td id="average-remaining-defense-troops">0</td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <h2>Results</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td>Victories</td>
+              <td id="victories">0</td>
+            </tr>
+            <tr>
+              <td>Average remaining attack troops on victories</td>
+              <td id="average-remaining-attack-troops">0</td>
+            </tr>
+            <tr>
+              <td>Defeats</td>
+              <td id="defeats">0</td>
+            </tr>
+            <tr>
+              <td>Average remaining defense troops on defeats</td>
+              <td id="average-remaining-defense-troops">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <script>
