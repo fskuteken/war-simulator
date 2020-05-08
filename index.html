@@ -171,7 +171,7 @@
         defeatsResult.innerHTML = `${defeats} (${(100 * defeats / total).toFixed(1)}%)`
 
         averageRemainingAttackTroopsResult.innerHTML =
-          victories && (victoryRemainingAttackTroops / victories).toFixed(2)
+          victories && (victoryRemainingAttackTroops / victories + 1).toFixed(2)
         averageRemainingDefenseTroopsResult.innerHTML =
           defeats && (defeatRemainingDefenseTroops / defeats).toFixed(2)
       }
