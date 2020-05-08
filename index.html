@@ -43,12 +43,12 @@
           </tr>
           <tr>
             <td>
-              <label for="simulation-quantity">
-                Simulation quantity
+              <label for="iterations">
+                Iterations
               </label>
             </td>
             <td>
-              <input id="simulation-quantity" type="number" value="10000">
+              <input id="iterations" type="number" value="10000">
             </td>
           </tr>
           <tr>
@@ -90,7 +90,7 @@
     <script>
       const availableAttackingTroopsInput = document.getElementById('available-attacking-troops')
       const availableDefendingTroopsInput = document.getElementById('available-defending-troops')
-      const simulationQuantityInput = document.getElementById('simulation-quantity')
+      const iterationsInput = document.getElementById('iterations')
       const victoriesResult = document.getElementById('victories')
       const averageRemainingAttackTroopsResult = document.getElementById('average-remaining-attack-troops')
       const defeatsResult = document.getElementById('defeats')
@@ -148,14 +148,14 @@
       const onSimulationButtonClick = () => {
         const availableAttackingTroops = parseInt(availableAttackingTroopsInput.value) - 1
         const availableDefendingTroops = parseInt(availableDefendingTroopsInput.value)
-        const total = parseInt(simulationQuantityInput.value)
+        const iterations = parseInt(iterationsInput.value)
 
         let victories = 0
         let defeats = 0
         let victoryRemainingAttackTroops = 0
         let defeatRemainingDefenseTroops = 0
 
-        for (let i = 0; i < total; i++) {
+        for (let i = 0; i < iterations; i++) {
           const [remainingAttackTroops, remainingDefenseTroops] =
             simulateWar(availableAttackingTroops, availableDefendingTroops)
 
@@ -168,8 +168,8 @@
           }
         }
 
-        victoriesResult.innerHTML = `${victories} (${(100 * victories / total).toFixed(1)}%)`
-        defeatsResult.innerHTML = `${defeats} (${(100 * defeats / total).toFixed(1)}%)`
+        victoriesResult.innerHTML = `${victories} (${(100 * victories / iterations).toFixed(1)}%)`
+        defeatsResult.innerHTML = `${defeats} (${(100 * defeats / iterations).toFixed(1)}%)`
 
         averageRemainingAttackTroopsResult.innerHTML =
           victories && (victoryRemainingAttackTroops / victories + 1).toFixed(2)
