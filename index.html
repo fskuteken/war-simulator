@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>War Simulator</title>
+    <meta charset="utf-8">
+    <style>
+      body {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+
+      .simulation-button {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>War Simulator</h1>
+
+    <div>
+      <h2>Inputs</h2>
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <label for="available-attacking-troops">
+                Available attacking troops
+              </label>
+            </td>
+            <td>
+              <input id="available-attacking-troops" type="number" value="2">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="available-defending-troops">
+                Available defending troops
+              </label>
+            </td>
+            <td>
+              <input id="available-defending-troops" type="number" value="1">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="simulation-quantity">
+                Simulation quantity
+              </label>
+            </td>
+            <td>
+              <input id="simulation-quantity" type="number" value="10000">
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <button class="simulation-button" onclick="onSimulationButtonClick()">
+                Simulate
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h2>Results</h2>
+      <table>
+        <tbody>
+          <tr>
+            <td>Victories</td>
+            <td id="victories">0</td>
+          </tr>
+          <tr>
+            <td>Average remaining attack troops on victories</td>
+            <td id="average-remaining-attack-troops">0</td>
+          </tr>
+          <tr>
+            <td>Defeats</td>
+            <td id="defeats">0</td>
+          </tr>
+          <tr>
+            <td>Average remaining defense troops on defeats</td>
+            <td id="average-remaining-defense-troops">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      const availableAttackingTroopsInput = document.getElementById('available-attacking-troops')
+      const availableDefendingTroopsInput = document.getElementById('available-defending-troops')
+      const simulationQuantityInput = document.getElementById('simulation-quantity')
+      const victoriesResult = document.getElementById('victories')
+      const averageRemainingAttackTroopsResult = document.getElementById('average-remaining-attack-troops')
+      const defeatsResult = document.getElementById('defeats')
+      const averageRemainingDefenseTroopsResult = document.getElementById('average-remaining-defense-troops')
+
+      const rollDice = () => 1 + Math.floor(Math.random() * 6)
+
+      const rollDices = (quantity) => {
+        const dices = []
+
+        for (let i = 0; i < quantity; i++) {
+          dices.push(rollDice())
+        }
+
+        dices.sort((a, b) => b - a)
+
+        return dices
+      }
+
+      const simulateBattle = (attackingTroops, defendingTroops) => {
+        const attackDices = rollDices(attackingTroops)
+        const defenseDices = rollDices(defendingTroops)
+        const battles = Math.min(attackDices.length, defenseDices.length)
+
+        let attackCasualties = 0
+        let defenseCasualties = 0
+
+        for (let i = 0; i < battles; i++) {
+          if (attackDices[i] <= defenseDices[i]) {
+            attackCasualties++
+          } else {
+            defenseCasualties++
+          }
+        }
+
+        return [attackCasualties, defenseCasualties]
+      }
+
+      const simulateWar = (availableAttackTroops, availableDefenseTroops) => {
+        while (availableAttackTroops > 0 && availableDefenseTroops > 0) {
+          let battleAttackTroops = Math.min(availableAttackTroops, 3)
+          let battleDefenseTroops = Math.min(availableDefenseTroops, 3);
+
+          const [attackCasualties, defenseCasualties] = simulateBattle(
+            battleAttackTroops, battleDefenseTroops
+          )
+
+          availableAttackTroops -= attackCasualties
+          availableDefenseTroops -= defenseCasualties
+        }
+
+        return [availableAttackTroops, availableDefenseTroops]
+      }
+
+      const onSimulationButtonClick = () => {
+        const availableAttackingTroops = parseInt(availableAttackingTroopsInput.value) - 1
+        const availableDefendingTroops = parseInt(availableDefendingTroopsInput.value)
+        const total = parseInt(simulationQuantityInput.value)
+
+        let victories = 0
+        let defeats = 0
+        let victoryRemainingAttackTroops = 0
+        let defeatRemainingDefenseTroops = 0
+
+        for (let i = 0; i < total; i++) {
+          const [remainingAttackTroops, remainingDefenseTroops] =
+            simulateWar(availableAttackingTroops, availableDefendingTroops)
+
+          if (remainingDefenseTroops === 0) {
+            victories++
+            victoryRemainingAttackTroops += remainingAttackTroops
+          } else {
+            defeats++
+            defeatRemainingDefenseTroops += remainingDefenseTroops
+          }
+        }
+
+        victoriesResult.innerHTML = `${victories} (${(100 * victories / total).toFixed(1)}%)`
+        defeatsResult.innerHTML = `${defeats} (${(100 * defeats / total).toFixed(1)}%)`
+
+        averageRemainingAttackTroopsResult.innerHTML =
+          victories && (victoryRemainingAttackTroops / victories).toFixed(2)
+        averageRemainingDefenseTroopsResult.innerHTML =
+          defeats && (defeatRemainingDefenseTroops / defeats).toFixed(2)
+      }
+    </script>
+  </body>
+</html>
