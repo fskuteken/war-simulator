@@ -113,8 +113,13 @@
       </div>
 
       <div class="section">
-        <h3>Summary</h3>
-        <canvas id="victory-ratio"></canvas>
+        <h3>Remaining attack troops</h3>
+        <canvas id="remaining-attack-troops-chart"></canvas>
+      </div>
+
+      <div class="section">
+        <h3>Remaining defense troops</h3>
+        <canvas id="remaining-defense-troops-chart"></canvas>
       </div>
     </div>
 
@@ -197,17 +202,33 @@
         }
       }
 
-      var victoryRatioChart = new Chart('victory-ratio', {
+      var remainingAttackTroopsChart = new Chart('remaining-attack-troops-chart', {
         type: 'bar',
         data: {
-          labels: ['Victory', 'Defeat'],
+          labels: [],
           datasets: [{
-            label: 'Victory ratio',
-            data: [10, 10],
-            backgroundColor: [
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 99, 132, 0.2)'
-            ]
+            label: 'Remaining attack troops',
+            data: []
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      })
+
+      var remainingDefenseTroopsChart = new Chart('remaining-defense-troops-chart', {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Remaining defense troops',
+            data: []
           }]
         },
         options: {
@@ -290,13 +311,20 @@
         averageRemainingAttackTroopsResult.innerHTML = result.averageRemainingAttackTroops().toFixed(2)
         averageRemainingDefenseTroopsResult.innerHTML = result.averageRemainingDefenseTroops().toFixed(2)
 
-        updateVictoryRatioChart(result);
+        updateRemainingAttackTroopsChart(result);
+        updateRemainingDefenseTroopsChart(result);
       }
 
-      const updateVictoryRatioChart = (result) => {
-        victoryRatioChart.data.datasets[0].data[0] = result.victories
-        victoryRatioChart.data.datasets[0].data[1] = result.defeats
-        victoryRatioChart.update()
+      const updateRemainingAttackTroopsChart = (result) => {
+        remainingAttackTroopsChart.data.labels = Object.keys(result.remainingAttackTroopsCount)
+        remainingAttackTroopsChart.data.datasets[0].data = Object.values(result.remainingAttackTroopsCount)
+        remainingAttackTroopsChart.update()
+      }
+
+      const updateRemainingDefenseTroopsChart = (result) => {
+        remainingDefenseTroopsChart.data.labels = Object.keys(result.remainingDefenseTroopsCount)
+        remainingDefenseTroopsChart.data.datasets[0].data = Object.values(result.remainingDefenseTroopsCount)
+        remainingDefenseTroopsChart.update()
       }
     </script>
   </body>
