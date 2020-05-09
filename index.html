@@ -16,12 +16,17 @@
       }
 
       h1, h2, h3, h4, h5, h6 {
-        margin: 0 0 1rem 0;
+        margin: 0 0 0.5rem 0;
         font-weight: 500;
+      }
+
+      table {
+        margin: 0;
       }
 
       canvas {
         background-color: #ffffff;
+        margin: 1rem 0;
       }
 
       .container {
@@ -30,7 +35,7 @@
       }
 
       .section {
-        margin-bottom: 3rem;
+        margin-bottom: 1rem;
       }
 
       .simulation-button {
@@ -97,16 +102,8 @@
               <td id="victories">0</td>
             </tr>
             <tr>
-              <td>Average remaining attack troops on victories</td>
-              <td id="average-remaining-attack-troops">0</td>
-            </tr>
-            <tr>
               <td>Defeats</td>
               <td id="defeats">0</td>
-            </tr>
-            <tr>
-              <td>Average remaining defense troops on defeats</td>
-              <td id="average-remaining-defense-troops">0</td>
             </tr>
           </tbody>
         </table>
@@ -114,11 +111,17 @@
 
       <div class="section">
         <h3>Remaining attack troops</h3>
+        <div>
+          Average: <span id="average-remaining-attack-troops">0</span>
+        </div>
         <canvas id="remaining-attack-troops-chart"></canvas>
       </div>
 
       <div class="section">
         <h3>Remaining defense troops</h3>
+        <div>
+          Average: <span id="average-remaining-defense-troops">0</span>
+        </div>
         <canvas id="remaining-defense-troops-chart"></canvas>
       </div>
     </div>
