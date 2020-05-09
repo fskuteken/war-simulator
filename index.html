@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <style>
       html, body {
         margin: 0;
@@ -19,9 +20,17 @@
         font-weight: 500;
       }
 
+      canvas {
+        background-color: #ffffff;
+      }
+
       .container {
         max-width: 35rem;
         margin: 0 auto;
+      }
+
+      .section {
+        margin-bottom: 3rem;
       }
 
       .simulation-button {
@@ -33,7 +42,7 @@
     <div class="container">
       <h1>War Simulator</h1>
 
-      <div>
+      <div class="section">
         <h2>Inputs</h2>
         <table>
           <tbody>
@@ -79,7 +88,7 @@
         </table>
       </div>
 
-      <div>
+      <div class="section">
         <h2>Results</h2>
         <table>
           <tbody>
@@ -102,6 +111,11 @@
           </tbody>
         </table>
       </div>
+
+      <div class="section">
+        <h3>Summary</h3>
+        <canvas id="victory-ratio"></canvas>
+      </div>
     </div>
 
     <script>
@@ -112,6 +126,30 @@
       const averageRemainingAttackTroopsResult = document.getElementById('average-remaining-attack-troops')
       const defeatsResult = document.getElementById('defeats')
       const averageRemainingDefenseTroopsResult = document.getElementById('average-remaining-defense-troops')
+
+      var victoryRatioChart = new Chart('victory-ratio', {
+        type: 'bar',
+        data: {
+          labels: ['Victory', 'Defeat'],
+          datasets: [{
+            label: 'Victory ratio',
+            data: [10, 10],
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 99, 132, 0.2)'
+            ]
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      })
 
       const rollDice = () => 1 + Math.floor(Math.random() * 6)
 
@@ -192,6 +230,14 @@
           victories && (victoryRemainingAttackTroops / victories + 1).toFixed(2)
         averageRemainingDefenseTroopsResult.innerHTML =
           defeats && (defeatRemainingDefenseTroops / defeats).toFixed(2)
+
+        updateVictoryRatioChart(victories, defeats);
+      }
+
+      const updateVictoryRatioChart = (victories, defeats) => {
+        victoryRatioChart.data.datasets[0].data[0] = victories
+        victoryRatioChart.data.datasets[0].data[1] = defeats
+        victoryRatioChart.update()
       }
     </script>
   </body>
