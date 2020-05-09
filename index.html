@@ -127,6 +127,76 @@
       const defeatsResult = document.getElementById('defeats')
       const averageRemainingDefenseTroopsResult = document.getElementById('average-remaining-defense-troops')
 
+      class SimulationResult {
+        constructor () {
+          this.victories = 0
+          this.defeats = 0
+          this.iterations = 0
+          this.remainingAttackTroopsCount = {}
+          this.remainingDefenseTroopsCount = {}
+        }
+
+        add (remainingAttackTroops, remainingDefenseTroops) {
+          this.iterations++
+
+          const isVictory = remainingDefenseTroops === 0
+
+          if (isVictory) {
+            this.addVictory(remainingAttackTroops)
+          } else {
+            this.addDefeat(remainingDefenseTroops)
+          }
+        }
+
+        addVictory (remainingAttackTroops) {
+          this.victories++
+
+          if (this.remainingAttackTroopsCount[remainingAttackTroops]) {
+            this.remainingAttackTroopsCount[remainingAttackTroops]++
+          } else {
+            this.remainingAttackTroopsCount[remainingAttackTroops] = 1
+          }
+        }
+
+        addDefeat (remainingDefenseTroops) {
+          this.defeats++
+
+          if (this.remainingDefenseTroopsCount[remainingDefenseTroops]) {
+            this.remainingDefenseTroopsCount[remainingDefenseTroops]++
+          } else {
+            this.remainingDefenseTroopsCount[remainingDefenseTroops] = 1
+          }
+        }
+
+        victoryPercentage() {
+          return this.victories && 100 * this.victories / this.iterations
+        }
+
+        defeatPercentage() {
+          return this.defeats && 100 * this.defeats / this.iterations
+        }
+
+        averageRemainingAttackTroops () {
+          let total = 0
+
+          Object.entries(this.remainingAttackTroopsCount).forEach(([key, value]) => {
+            total += parseInt(key) * value
+          })
+
+          return this.victories && total / this.victories
+        }
+
+        averageRemainingDefenseTroops () {
+          let total = 0
+
+          Object.entries(this.remainingDefenseTroopsCount).forEach(([key, value]) => {
+            total += parseInt(key) * value
+          })
+
+          return this.defeats &&  total / this.defeats
+        }
+      }
+
       var victoryRatioChart = new Chart('victory-ratio', {
         type: 'bar',
         data: {
@@ -201,42 +271,31 @@
       }
 
       const onSimulationButtonClick = () => {
-        const availableAttackingTroops = parseInt(availableAttackingTroopsInput.value) - 1
+        const availableAttackingTroops = parseInt(availableAttackingTroopsInput.value)
         const availableDefendingTroops = parseInt(availableDefendingTroopsInput.value)
         const iterations = parseInt(iterationsInput.value)
 
-        let victories = 0
-        let defeats = 0
-        let victoryRemainingAttackTroops = 0
-        let defeatRemainingDefenseTroops = 0
+        const result = new SimulationResult()
 
         for (let i = 0; i < iterations; i++) {
           const [remainingAttackTroops, remainingDefenseTroops] =
-            simulateWar(availableAttackingTroops, availableDefendingTroops)
+            simulateWar(availableAttackingTroops - 1, availableDefendingTroops)
 
-          if (remainingDefenseTroops === 0) {
-            victories++
-            victoryRemainingAttackTroops += remainingAttackTroops
-          } else {
-            defeats++
-            defeatRemainingDefenseTroops += remainingDefenseTroops
-          }
+          result.add(remainingAttackTroops + 1, remainingDefenseTroops)
         }
 
-        victoriesResult.innerHTML = `${victories} (${(100 * victories / iterations).toFixed(1)}%)`
-        defeatsResult.innerHTML = `${defeats} (${(100 * defeats / iterations).toFixed(1)}%)`
+        victoriesResult.innerHTML = `${result.victories} (${result.victoryPercentage().toFixed(1)}%)`
+        defeatsResult.innerHTML = `${result.defeats} (${result.defeatPercentage().toFixed(1)}%)`
 
-        averageRemainingAttackTroopsResult.innerHTML =
-          victories && (victoryRemainingAttackTroops / victories + 1).toFixed(2)
-        averageRemainingDefenseTroopsResult.innerHTML =
-          defeats && (defeatRemainingDefenseTroops / defeats).toFixed(2)
+        averageRemainingAttackTroopsResult.innerHTML = result.averageRemainingAttackTroops().toFixed(2)
+        averageRemainingDefenseTroopsResult.innerHTML = result.averageRemainingDefenseTroops().toFixed(2)
 
-        updateVictoryRatioChart(victories, defeats);
+        updateVictoryRatioChart(result);
       }
 
-      const updateVictoryRatioChart = (victories, defeats) => {
-        victoryRatioChart.data.datasets[0].data[0] = victories
-        victoryRatioChart.data.datasets[0].data[1] = defeats
+      const updateVictoryRatioChart = (result) => {
+        victoryRatioChart.data.datasets[0].data[0] = result.victories
+        victoryRatioChart.data.datasets[0].data[1] = result.defeats
         victoryRatioChart.update()
       }
     </script>
